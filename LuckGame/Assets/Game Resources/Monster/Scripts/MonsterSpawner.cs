@@ -37,6 +37,8 @@ public class MonsterSpawner : MonoBehaviour
         {
             // 프리팹 생성
             Instantiate(monsterPrefab, spawnPosition, Quaternion.identity, parentTransform);
+            // 생성된 몬스터 수 증가
+            GameManager.Instance.AddMonsterCount();
 
             // 지정된 시간만큼 대기
             yield return new WaitForSeconds(spawnInterval);
