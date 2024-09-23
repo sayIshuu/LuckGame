@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /* Awake가 작동하면 게임 시작과 동시에 GameManager오브젝트가 사라진다. 원인 찾기전까지 주석처리. 어차피 씬변경전엔 필요없는 코드
     // Awake는 MonoBehaviour에서 호출되는 생명주기 함수
     private void Awake()
     {
@@ -43,7 +44,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);  // 이미 인스턴스가 있으면 자신을 파괴
         }
     }
-
+    */
 
     public int MonsterCount
     {
@@ -53,5 +54,10 @@ public class GameManager : MonoBehaviour
     public void AddMonsterCount()
     {
         monsterCount++;
+        MonsterCountChanged?.Invoke(monsterCount);  // 값이 변경되면 이벤트 발동
     }
+
+    // 몬스터 수가 변경될 때 발생하는 이벤트 (int 파라미터는 새로운 몬스터 수)
+    public event System.Action<int> MonsterCountChanged;
+
 }
