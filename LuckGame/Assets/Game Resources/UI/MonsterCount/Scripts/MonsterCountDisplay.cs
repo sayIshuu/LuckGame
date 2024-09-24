@@ -7,6 +7,7 @@ public class MonsterCountDisplay : MonoBehaviour
 {
     public TextMeshProUGUI monsterCountText;
 
+    // 안전한 이벤트 구독을 위해 OnEnable과 OnDisable 사용!!!
     void OnEnable()
     {
         // GameManager의 이벤트를 구독하여 몬스터 수 변경 시 HUD를 갱신함
