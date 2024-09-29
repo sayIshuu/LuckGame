@@ -70,4 +70,10 @@ public class GameManager : MonoBehaviour
         monsterCount++;
         MonsterCountChanged?.Invoke(monsterCount);
     }
+
+    public void RemoveMonsterCount()
+    {
+        monsterCount--;
+        MonsterCountChanged?.Invoke(monsterCount);
+    }
 }

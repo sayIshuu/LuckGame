@@ -31,6 +31,7 @@ public class MonsterGuardManager : MonoBehaviour
     {
         //사망처리
         OnMonsterDestroyed?.Invoke(this);
+        GameManager.Instance.RemoveMonsterCount();
         Destroy(gameObject);
     }
 }
