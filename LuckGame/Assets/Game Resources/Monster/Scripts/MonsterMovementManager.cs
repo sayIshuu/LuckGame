@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterMoving : MonoBehaviour
+public class MonsterMovementManager : MonoBehaviour
 {
     [SerializeField] float speed = 2.0f; // 이동 속도
     private Vector2 moveDirection = Vector2.left; // 이동할 방향

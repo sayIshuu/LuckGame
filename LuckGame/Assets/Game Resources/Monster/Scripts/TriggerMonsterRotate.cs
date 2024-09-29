@@ -9,7 +9,7 @@ public class TriggerMonsterRotate : MonoBehaviour
     {
         if (other.CompareTag("Monster"))
         {
-            MonsterMoving monster = other.GetComponent<MonsterMoving>();
+            MonsterMovementManager monster = other.GetComponent<MonsterMovementManager>();
             if (monster != null)
             {
                 monster.ChangeDirection(isFlip);
