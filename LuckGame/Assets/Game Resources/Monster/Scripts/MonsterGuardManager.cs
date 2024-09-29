@@ -9,8 +9,8 @@ public class MonsterGuardManager : MonoBehaviour
     [SerializeField] float defense = 10.0f;         //방어력
     [SerializeField] float magicResistance = 10.0f; //마법저항력
 
-    public float Defense { get { return 100.0f - defense; } }
-    public float MagicResistance { get { return 100.0f - magicResistance; } }
+    public float Defense { get { return (100.0f - defense)*0.01f; } }
+    public float MagicResistance { get { return (100.0f - magicResistance)*0.01f; } }
 
 
     //물리공격 받았을 때, 퍼블릭으로 선언해서 투사체 스크립트에서 호출되게 함.

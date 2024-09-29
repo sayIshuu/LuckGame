@@ -5,10 +5,11 @@ using UnityEngine;
 
 public class HeroManager : MonoBehaviour
 {
-    // 플레이어의 공격 종류. 추후 추가 예정.
-    //public List<Attack> Attacks; // 플레이어가 사용할 수 있는 여러 공격 종류
-    //public Attack currentAttack; // 현재 선택된 공격
     //public float BuffMultiplier = 0.0f; // 최대 체력에 비례한 버프 비율
+
+    //애니메이션 관련 변수
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
 
     //인터벌로 관리하면 추후 시전시간이 긴 스킬이 추가되도 쉽게 관리 가능
     [SerializeField] float attackInterval = 1.0f; // 공격 속도
@@ -17,16 +18,40 @@ public class HeroManager : MonoBehaviour
     //공격력
     public float attackPower = 10.0f;
 
-    public List<Attack> attackList; // 스킬들
+    [SerializeField] List<Attack> attackList; // 스킬들
     public Attack currentAttack; // 현재 스킬
-
-    private TargetingManager targetingManager;
+    
+    //타게팅 구현 시 주석 해제
+    //private TargetingManager targetingManager;
+    //private MonsterGuardManager targetMonster;
+    public MonsterGuardManager targetMonster;
 
     private void Start()
     {
-        targetingManager = GetComponent<TargetingManager>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+        //targetingManager = GetComponent<TargetingManager>();
         currentAttack = attackList[0]; // 초기 스킬 설정
         StartCoroutine(AttackCoroutine());
+    }
+
+    private void Update()
+    {
+        FlipTurret();
+    }
+    void FlipTurret()
+    {
+        if (targetMonster != null)
+        {
+            if (targetMonster.transform.position.x > transform.position.x)
+            {
+                spriteRenderer.flipX = false;
+            }
+            else
+            {
+                spriteRenderer.flipX = true;
+            }
+        }
     }
 
     private IEnumerator AttackCoroutine()
@@ -34,12 +59,20 @@ public class HeroManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(attackInterval);
-            LaunchAttack();
+            //targetMonster = targetingManager.FindTarget();
+            LaunchAttack(targetMonster);
         }
     }
 
     public void LaunchAttack(MonsterGuardManager _targetMonster)
     {
+        if (_targetMonster == null)
+        {
+            return;
+        }
+        // 공격 애니메이션
+        animator.SetTrigger("Attack");
+
         // 운빨로 스킬 선택
         float randomValue = Random.Range(0.0f, 1.0f);
         float cumulativeProbability = 0.0f;
@@ -77,7 +110,8 @@ public class HeroManager : MonoBehaviour
         else
         {
             // 원거리 공격
-            // 공격 실행
+            GameObject projectile = Instantiate(currentAttack.projectilePrefab, transform.position, Quaternion.identity);
+            projectile.GetComponent<Projectile>().Initialize(targetMonster, totalDamage, currentAttack.projectileSpeed);
         }
     }
 }
