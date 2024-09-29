@@ -24,6 +24,11 @@ public class Projectile : MonoBehaviour
             return;
         }
 
+        // 몬스터를 바라보게 설정 (2D에서 LookAt 방식)
+        Vector3 direction = targetMonster.transform.position - transform.position;
+        transform.right = direction; // 투사체의 오른쪽 방향이 몬스터를 향하도록 설정
+
+
         // 몬스터를 향해 투사체 이동
         transform.position = Vector3.MoveTowards(transform.position, targetMonster.transform.position, speed * Time.deltaTime);
 
