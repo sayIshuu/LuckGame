@@ -12,6 +12,8 @@ public class MonsterGuardManager : MonoBehaviour
     public float Defense { get { return (100.0f - defense)*0.01f; } }
     public float MagicResistance { get { return (100.0f - magicResistance)*0.01f; } }
 
+    public delegate void MonsterDestroyed(MonsterGuardManager monster);
+    public static event MonsterDestroyed OnMonsterDestroyed;
 
     //물리공격 받았을 때, 퍼블릭으로 선언해서 투사체 스크립트에서 호출되게 함.
     public void TakeDamage(float damageAmount)
@@ -28,6 +30,7 @@ public class MonsterGuardManager : MonoBehaviour
     void Die()
     {
         //사망처리
+        OnMonsterDestroyed?.Invoke(this);
         Destroy(gameObject);
     }
 }

@@ -21,16 +21,15 @@ public class HeroManager : MonoBehaviour
     [SerializeField] List<Attack> attackList; // 스킬들
     public Attack currentAttack; // 현재 스킬
     
-    //타게팅 구현 시 주석 해제
-    //private TargetingManager targetingManager;
-    //private MonsterGuardManager targetMonster;
-    public MonsterGuardManager targetMonster;
+    //타게팅
+    private TargetingManager targetingManager;
+    private MonsterGuardManager targetMonster;
 
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        //targetingManager = GetComponent<TargetingManager>();
+        targetingManager = GetComponent<TargetingManager>();
         currentAttack = attackList[0]; // 초기 스킬 설정
         StartCoroutine(AttackCoroutine());
     }
@@ -59,17 +58,16 @@ public class HeroManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(attackInterval);
-            //targetMonster = targetingManager.FindTarget();
-            LaunchAttack(targetMonster);
+            targetMonster = targetingManager.GetTargetMonster();
+            if (targetMonster != null)
+            {
+                LaunchAttack(targetMonster);
+            }
         }
     }
 
     public void LaunchAttack(MonsterGuardManager _targetMonster)
     {
-        if (_targetMonster == null)
-        {
-            return;
-        }
         // 공격 애니메이션
         animator.SetTrigger("Attack");
 
@@ -110,7 +108,7 @@ public class HeroManager : MonoBehaviour
         else
         {
             // 원거리 공격
-            GameObject projectile = Instantiate(currentAttack.projectilePrefab, transform.position, Quaternion.identity);
+            GameObject projectile = Instantiate(currentAttack.projectilePrefab, transform.position, Quaternion.identity, this.transform);
             projectile.GetComponent<Projectile>().Initialize(targetMonster, totalDamage, currentAttack.projectileSpeed);
         }
     }
