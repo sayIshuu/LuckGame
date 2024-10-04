@@ -13,7 +13,8 @@ public class HeroManager : MonoBehaviour
     public Attack currentAttack;                    // 현재 쓰려는 스킬
 
     // 인터벌로 관리하면 추후 시전시간이 긴 스킬이 추가되도 쉽게 관리 가능
-    [SerializeField] float attackInterval = 1.0f;   // 공격 속도
+    [SerializeField] float attackSpeed = 1.0f;      // 공격 속도
+    private float attackInterval;   // 공격 속도
 
     // 애니메이션 관련 변수
     private Animator animator;
@@ -29,6 +30,7 @@ public class HeroManager : MonoBehaviour
         animator = GetComponent<Animator>();
         targetingManager = GetComponent<TargetingManager>();
         currentAttack = attackList[0]; // 초기 스킬 설정
+        attackInterval = 1.0f / attackSpeed;
         StartCoroutine(AttackCoroutine());
     }
 
