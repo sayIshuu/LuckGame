@@ -9,13 +9,14 @@ public class MonsterGuardManager : MonoBehaviour
     [SerializeField] float defense = 10.0f;         //방어력
     [SerializeField] float magicResistance = 10.0f; //마법저항력
 
-    public float Defense { get { return (100.0f - defense)*0.01f; } }
-    public float MagicResistance { get { return (100.0f - magicResistance)*0.01f; } }
+    // 유저 입장에서의 방마저는 실제 로직에서 0~1의 값으로 변환된다. 10 -> 0.9 그래서 이값이 데미지에 그대로 곱해져 감소시킨다.
+    public float Defense { get { return Mathf.Max(100.0f - defense, 0.0f)*0.01f; } }
+    public float MagicResistance { get { return Mathf.Max(100.0f - magicResistance, 0.0f)*0.01f; } }
 
     public delegate void MonsterDestroyed(MonsterGuardManager monster);
     public static event MonsterDestroyed OnMonsterDestroyed;
 
-    //물리공격 받았을 때, 퍼블릭으로 선언해서 투사체 스크립트에서 호출되게 함.
+    //공격 받았을 때, 퍼블릭으로 선언해서 투사체 스크립트에서 호출되게 함.
     public void TakeDamage(float damageAmount)
     {
         currentHealth -= damageAmount;
@@ -29,7 +30,6 @@ public class MonsterGuardManager : MonoBehaviour
     //사망처리
     void Die()
     {
-        //사망처리
         OnMonsterDestroyed?.Invoke(this);
         GameManager.Instance.RemoveMonsterCount();
         Destroy(gameObject);
