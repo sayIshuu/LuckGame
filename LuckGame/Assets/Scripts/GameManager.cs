@@ -5,7 +5,25 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
-    public static GameManager Instance { get { return _instance; } }
+    public static GameManager Instance
+    {
+        get
+        {
+            // 인스턴스가 없으면 새로 생성
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<GameManager>();
+
+                if (_instance == null)
+                {
+                    GameObject singleton = new GameObject(typeof(GameManager).Name);
+                    _instance = singleton.AddComponent<GameManager>();
+                    //DontDestroyOnLoad(singleton);  // 씬이 변경되어도 삭제되지 않음
+                }
+            }
+            return _instance;
+        }
+    }
 
     private int monsterCount = 0;
 
@@ -23,26 +41,6 @@ public class GameManager : MonoBehaviour
     }
 
     /* 자꾸 캐시가 남아서 자기 자신을 파괴하는 버그 발생해서 위처럼 수정
-    // 인스턴스 접근
-    public static GameManager Instance
-    {
-        get
-        {
-            // 인스턴스가 없으면 새로 생성
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<GameManager>();
-
-                if (_instance == null)
-                {
-                    GameObject singleton = new GameObject(typeof(GameManager).Name);
-                    _instance = singleton.AddComponent<GameManager>();
-                    DontDestroyOnLoad(singleton);  // 씬이 변경되어도 삭제되지 않음
-                }
-            }
-            return _instance;
-        }
-    }
     private void Awake()
     {
         // 인스턴스 중복 방지
@@ -70,6 +68,12 @@ public class GameManager : MonoBehaviour
     public void AddMonsterCount()
     {
         monsterCount++;
+        MonsterCountChanged?.Invoke(monsterCount);
+    }
+
+    public void RemoveMonsterCount()
+    {
+        monsterCount--;
         MonsterCountChanged?.Invoke(monsterCount);
     }
 }
